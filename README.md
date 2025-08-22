@@ -1,5 +1,42 @@
 # CIPRW: Communication Interface for Programmable Logic Controllers with Reliable Workers
 
+           ┌---------------------------------------------------------------┐
+           │                 IndustrialZMQEIPManager                       │
+           │  (main thread – coordinates the pattern)                      │
+           └---------------------------------------------------------------┘
+                                     │
+                                     │ 1. create / PUSH
+                                     ▼
+┌------------------------┐   ZMQ PUSH    ┌-----------------------┐
+│      VENTILATOR        │◄--------------┤  ventilator socket    │
+│ (PUSH, binds :5557)    │               │ (binds to fixed port) │
+└------------------------┘               └-----------------------┘
+                                     │
+                                     │ 2. round-robin fan-out
+                                     ▼
+┌-------------┐  ZMQ PULL/PUSH  ┌-------------┐  ZMQ PULL/PUSH  ┌-------------┐
+│  WORKER 1   │◄---------------►│  WORKER 2   │◄---------------►│  WORKER N   │
+│             │                 │             │                 │             │
+│ • PULL work │                 │ • PULL work │                 │ • PULL work │
+│ • CALL      │                 │ • CALL      │                 │ • CALL      │
+│   libeip    │                 │   libeip    │                 │   libeip    │
+│ • PUSH res  │                 │ • PUSH res  │                 │ • PUSH res  │
+└-------------┘                 └-------------┘                 └-------------┘
+                                     │
+                                     │ 3. collect
+                                     ▼
+┌------------------------┐   ZMQ PULL    ┌-----------------------┐
+│        SINK            │◄--------------┤   sink socket         │
+│ (PULL, binds :5558)    │               │ (binds to fixed port) │
+└------------------------┘               └-----------------------┘
+                                     │
+                                     │ 4. deliver
+                                     ▼
+           ┌---------------------------------------------------------------┐
+           │        _collect_responses   (background thread)               │
+           │        routes results back to waiting client threads          │
+           └---------------------------------------------------------------┘
+
 
 ## Table of Contents
 
