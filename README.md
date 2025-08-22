@@ -38,31 +38,7 @@ CIPRW (Communication Interface for Programmable Logic Controllers with Reliable 
 CIPRW follows a ventilator-worker-sink pattern for distributed processing:
 
 ```
-                                 ┌─────────────┐
-                                 │             │
-                                 │    PLC 1    │
-                                 │             │
-                                 └──────┬──────┘
-                                        │
-                                        │
-┌─────────────┐    ┌─────────────┐    ┌─┴───────────┐    ┌─────────────┐
-│             │    │             │    │             │    │             │
-│  Client     │◄───┤  Manager    │◄───┤  Worker 1   │◄───┤    PLC 2    │
-│ Application │    │ (Ventilator)│    │             │    │             │
-│             │────►             │────►             │────►             │
-└─────────────┘    │  (Sink)     │    └─────────────┘    └─────────────┘
-                   │             │           ▲
-                   └─────┬───────┘           │            ┌─────────────┐
-                         │                   │            │             │
-                         │                   │            │    PLC 3    │
-                         │                   │            │             │
-                         ▼                   │            └──────┬──────┘
-                   ┌─────────────┐           │                   │
-                   │             │           │                   │
-                   │  Worker 2   │◄──────────┘                   │
-                   │             │                               │
-                   │             │◄──────────────────────────────┘
-                   └─────────────┘
+
 ```
 
 The system consists of:
