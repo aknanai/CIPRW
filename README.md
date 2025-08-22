@@ -1,6 +1,6 @@
 # CIPRW: Communication Interface for Programmable Logic Controllers with Reliable Workers
 
-![CIPRW Logo](https://via.placeholder.com/800x200?text=CIPRW)
+#![CIPRW Logo](https://via.placeholder.com/800x200?text=CIPRW)
 
 ## Table of Contents
 
